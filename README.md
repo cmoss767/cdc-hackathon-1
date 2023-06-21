@@ -38,8 +38,8 @@ This Turborepo has some additional tools already setup for you:
 2. Open terminal and run
 
 ```sh
-npm i -g yarn
-npm i -g expo-cli
+npm install -g yarn
+npm install -g expo-cli
 ```
 
 3. Install MySQL community server and MySQL Workbench app
@@ -51,7 +51,7 @@ npm i -g expo-cli
 6. Open a terminal in the project's root directory and run:
 
 ```sh
-  yarn i
+  yarn install
 ```
 
 7. Have fun and be yourself :)
