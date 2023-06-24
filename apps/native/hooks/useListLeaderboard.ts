@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 
-import axios from "axios";
+import ApiService from "../api/service";
 
-const listLeaderboard = () =>
-  axios.get("/api/leaderboard").then((res) => res?.data);
+const listLeaderboard = async () =>
+  await ApiService.get("/").then((res) => res?.data);
 
 function useListLeaderboard() {
   return useQuery(["leaderboard"], listLeaderboard);

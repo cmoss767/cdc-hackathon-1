@@ -1,18 +1,27 @@
+import { useMutation } from "@tanstack/react-query";
+import ApiService from "../api/service";
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
 
-const reportTrash = (data: any) => {
-  axios
-    .post("/api/report", {
-      params: {
-        ...data,
-      },
-    })
-    .then((res) => res?.data);
+const reportTrash = async (data: any) => {
+  return await ApiService.post("/report", {
+    amount: 1,
+    location: {},
+    name: "wizard",
+    report: true,
+    severity: "LOW",
+  })
+    .then()
+    .then((res: any) => res?.data?.data);
 };
 
 function useReportTrash() {
-  return useQuery(["report"], reportTrash);
+  return useMutation(reportTrash, {
+    onSuccess: () => {},
+    onError: (error, data) => {
+      console.log("error", data);
+      console.log(error);
+    },
+  });
 }
 
 export default useReportTrash;
