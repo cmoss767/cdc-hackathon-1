@@ -14,6 +14,9 @@
     "exec": "node -r tsconfig-paths/register -r ts-node/register ./src/index.ts",
     "ext": "ts, js"
   },
+  "prisma": {
+    "seed": "ts-node ./prisma/seed/main.ts"
+  },
   "dependencies": {
     "@prisma/client": "^4.16.0",
     "@tensorflow/tfjs": "^4.8.0",
