@@ -15,6 +15,7 @@ import React, { useEffect, useState } from "react";
 import MapView, { Marker, Polygon } from "react-native-maps";
 import { StyleSheet } from "react-native";
 import * as Location from "expo-location";
+import AddPoints from "../components/AddPoints";
 
 const Home = () => {
   const [userLocation, setUserLocation] = useState<any>(null);
@@ -117,6 +118,7 @@ const Home = () => {
                     Add Points
                   </Button>
                 </HStack>
+                <AddPoints />
               </Stack>
             </ScrollView>
           </Stack>

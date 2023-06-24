@@ -9,9 +9,16 @@ import {
   View,
 } from "native-base";
 import React from "react";
+import useListLeaderboard from "../hooks/useListLeaderboard";
 
 const Leaderboard = () => {
-  return <Text>Leaderboard</Text>;
+  const { data, isLoading } = useListLeaderboard();
+
+  return (
+    <>
+      <Text>Leaderboard</Text>
+    </>
+  );
 };
 
 export default Leaderboard;
