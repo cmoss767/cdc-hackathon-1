@@ -12,7 +12,7 @@ interface TrashBody {
 
 const addTrash = async (req: Request, res: Response) => {
   try {
-    const body = res.locals.data.body as TrashBody
+    const body = req.body as TrashBody
     const prisma = new PrismaClient()
 
     const newTrash = await prisma.trash.create({
@@ -20,6 +20,8 @@ const addTrash = async (req: Request, res: Response) => {
         ...body,
       },
     })
+
+    return res.json({ message: "sucessfully added trash", data: newTrash })
   } catch (err) {
     console.log(err)
   }
