@@ -5,6 +5,7 @@ import cookies from "cookie-parser"
 import cors from "cors"
 import getTrash from "./getTrash"
 import addTrash from "./addTrash"
+import findTrash from "./findTrash"
 
 const app = express()
 
@@ -19,7 +20,7 @@ app.use(express.json())
 
 app.get("/", getTrash)
 
-app.post("/")
+app.put("/predict-location", findTrash)
 
 app.post("/report", addTrash)
 
