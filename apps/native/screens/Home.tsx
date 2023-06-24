@@ -9,39 +9,43 @@ import {
   Stack,
   Text,
   View,
-} from "native-base";
+  Container,
+  List,
+} from "native-base"
 //import { RefreshControl } from "react-native";
-import React, { useEffect, useState } from "react";
-import MapView, { Marker, Polygon } from "react-native-maps";
-import { StyleSheet } from "react-native";
-import * as Location from "expo-location";
-import AddPoints from "../components/AddPoints";
+import React, { useEffect, useState } from "react"
+import MapView, { Marker, Polygon } from "react-native-maps"
+import { StyleSheet } from "react-native"
+import * as Location from "expo-location"
+import AddPoints from "../components/AddPoints"
+import useListLeaderboard from "../hooks/useListLeaderboard"
 
 const Home = () => {
-  const [userLocation, setUserLocation] = useState<any>(null);
+  const [userLocation, setUserLocation] = useState<any>(null)
+  const [showLeaderboard, setShowLeaderBoard] = useState(false)
 
-  console.log(userLocation);
-
-  const [errorMsg, setErrorMsg] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null)
 
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
+    ;(async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync()
       if (status !== "granted") {
-        return;
+        return
       } else {
-        let location = await Location.getCurrentPositionAsync({});
-        setUserLocation(location);
+        let location = await Location.getCurrentPositionAsync({})
+        setUserLocation(location)
       }
-    })();
-  }, []);
+    })()
+  }, [])
 
   const styles = StyleSheet.create({
     map: {
       width: "100%",
       height: "100%",
     },
-  });
+  })
+  const { data } = useListLeaderboard()
+  console.log(data)
 
   return (
     <>
@@ -79,7 +83,7 @@ const Home = () => {
                   </Button>
                 </HStack>
                 <HStack minHeight={"400px"}>
-                  {userLocation ? (
+                  {userLocation && !showLeaderboard ? (
                     <MapView
                       style={styles.map}
                       region={{
@@ -95,20 +99,49 @@ const Home = () => {
                         pinColor="#000000"
                       />
                     </MapView>
+                  ) : showLeaderboard ? (
+                    <Container>
+                      <List>
+                        {data
+                          ?.filter((el: any) => el.name && el)
+                          .map((leaders: any) => {
+                            return <Text>{leaders.name}</Text>
+                          })}
+                      </List>
+
+                      <Text>Leaderboard</Text>
+                    </Container>
                   ) : (
                     <Text>loading map...</Text>
                   )}
                 </HStack>
 
                 <HStack space={2} alignItems={"center"}>
-                  <Button
-                    variant={"solid"}
-                    colorScheme={"primary"}
-                    _text={{ color: "white" }}
-                    onPress={() => {}}
-                  >
-                    Leaderboard
-                  </Button>
+                  {showLeaderboard ? (
+                    <Button
+                      variant={"solid"}
+                      colorScheme={"primary"}
+                      _text={{ color: "white" }}
+                      onPress={() => {
+                        setShowLeaderBoard(false)
+                      }}
+                    >
+                      Map
+                    </Button>
+                  ) : (
+                    <Button
+                      variant={"solid"}
+                      colorScheme={"primary"}
+                      _text={{ color: "white" }}
+                      onPress={() => {
+                        setShowLeaderBoard(true)
+                        console.log("press")
+                      }}
+                    >
+                      Leaderboard
+                    </Button>
+                  )}
+
                   <Button
                     variant={"solid"}
                     colorScheme={"primary"}
@@ -125,6 +158,6 @@ const Home = () => {
         </View>
       </Box>
     </>
-  );
-};
-export default Home;
+  )
+}
+export default Home
