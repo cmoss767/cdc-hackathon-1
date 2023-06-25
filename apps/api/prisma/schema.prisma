@@ -14,6 +14,7 @@ model Trash {
     location Json?
     report   Boolean         @default(false)
     severity ReportSeverity?
+    time     DateTime        @default(now())
 }
 
 enum ReportSeverity {
