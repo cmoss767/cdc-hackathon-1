@@ -1,8 +1,17 @@
-import React from "react"
-import MapView, { Marker } from "react-native-maps"
-import { StyleSheet } from "react-native"
+import React, { useRef } from "react"
+import MapView, { Callout, Marker } from "react-native-maps"
+import { Linking, StyleSheet } from "react-native"
 import useGetTrashReports from "../hooks/useGetTrashReports"
-import { HStack, Spinner, Text } from "native-base"
+import {
+  Box,
+  HStack,
+  Heading,
+  Modal,
+  Popover,
+  Spinner,
+  Stack,
+  Text,
+} from "native-base"
 
 interface MapDisplayProps {
   userLocation: any
@@ -23,6 +32,8 @@ const MapDisplay = ({
   })
 
   const { data, isLoading, isError } = useGetTrashReports()
+
+  console.log(toggleMap, "toggleMap")
 
   const trashReports = data
     ?.filter((trash: any) => trash.report === false)
@@ -56,8 +67,8 @@ const MapDisplay = ({
         <Marker
           key={trash.id}
           coordinate={{
-            latitude: trash?.location?.latitude,
-            longitude: trash?.location?.longitude,
+            latitude: trash?.location[0],
+            longitude: trash?.location[1],
           }}
           title="Trash Picked Up! 🙌"
           description={`${
@@ -78,8 +89,8 @@ const MapDisplay = ({
           region={
             toggleMap
               ? {
-                  latitude: helpLocation?.coords.latitude,
-                  longitude: helpLocation?.coords.longitude,
+                  latitude: helpLocation?.[0],
+                  longitude: helpLocation?.[1],
                   latitudeDelta: 0.04,
                   longitudeDelta: 0.02,
                 }
@@ -99,13 +110,40 @@ const MapDisplay = ({
           {trashReports}
 
           {pickupReports}
+
+          <Box
+            w={toggleMap ? "100%" : "0%"}
+            h={"100px"}
+            bg={"white"}
+            rounded={"lg"}
+            shadow={1}
+            opacity={0.8}
+            display={"flex"}
+            alignItems={"center"}
+            justifyContent={"center"}
+          >
+            <Heading>Head to the Pink Pin! 🏃‍♂️</Heading>
+            <Text>EcoBot predicts that there is trash in this area! 🤖</Text>
+          </Box>
+
           {toggleMap && (
-            <Marker
-              coordinate={helpLocation?.coords}
-              title={"Head Here to Help! 🏃‍♂️"}
-              description="The EcoBot has predicted trash in this area! 🤖"
-              pinColor="#B4CDED"
-            />
+            <>
+              <Marker
+                coordinate={{
+                  latitude: helpLocation?.[0],
+                  longitude: helpLocation?.[1],
+                }}
+                title={"Press here..."}
+                description="to start a route to this location! 🗺"
+                onCalloutPress={() => {
+                  Linking.openURL(
+                    `https://www.google.com/maps/dir/?api=1&destination=${helpLocation?.[0]},${helpLocation?.[1]}`
+                  )
+                }}
+                pinColor="#ffa7d5"
+                isPreselected={true}
+              />
+            </>
           )}
         </MapView>
       ) : (

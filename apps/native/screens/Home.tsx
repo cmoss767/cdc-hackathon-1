@@ -111,10 +111,7 @@ const Home = () => {
                   {view === HomeScreen.MAP && (
                     <MapDisplay
                       userLocation={userLocation}
-                      helpLocation={
-                        //data || ""
-                        ""
-                      }
+                      helpLocation={data}
                       toggleMap={toggleMap}
                     />
                   )}
