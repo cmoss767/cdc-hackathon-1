@@ -1,12 +1,14 @@
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import ApiService from "../api/service"
+import { useQuery } from "@tanstack/react-query"
 
-const findTrash = (data: any) => {
-  axios.put("/api/predict-location").then((res) => res?.data);
-};
-
-function useFindTrash() {
-  return useQuery(["add"], findTrash);
+const findTrash = (data: { latitude: number; longitude: number }) => {
+  ApiService.put("/predict-location", data).then((res) => res?.data?.data)
 }
 
-export default useFindTrash;
+function useFindTrash(data: { latitude: number; longitude: number }) {
+  return useQuery(["find"], () => {
+    findTrash(data)
+  })
+}
+
+export default useFindTrash
