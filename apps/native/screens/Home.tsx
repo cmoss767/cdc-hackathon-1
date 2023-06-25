@@ -19,10 +19,20 @@ import { StyleSheet } from "react-native"
 import * as Location from "expo-location"
 import AddPoints from "../components/AddPoints"
 import useListLeaderboard from "../hooks/useListLeaderboard"
+import MapDisplay from "../components/MapDisplay"
+import Leaderboard from "../components/Leaderboard"
+
+enum HomeScreen {
+  MAP = "map",
+  LEADERBOARD = "leaderboard",
+  REPORT = "report",
+  FIND = "find",
+}
 
 const Home = () => {
   const [userLocation, setUserLocation] = useState<any>(null)
   const [showLeaderboard, setShowLeaderBoard] = useState(false)
+  const [view, setView] = useState<HomeScreen>(HomeScreen.MAP)
 
   const [errorMsg, setErrorMsg] = useState(null)
 
@@ -37,15 +47,6 @@ const Home = () => {
       }
     })()
   }, [])
-
-  const styles = StyleSheet.create({
-    map: {
-      width: "100%",
-      height: "100%",
-    },
-  })
-  const { data } = useListLeaderboard()
-  console.log(data)
 
   return (
     <>
@@ -69,89 +70,70 @@ const Home = () => {
                 space={2}
               >
                 <Heading fontWeight={600} size="sm" color="#999999">
-                  Eco Chamber
+                  Litter Ladder
                 </Heading>
                 <HStack space={2} alignItems={"center"}>
                   <Button
                     variant={"solid"}
                     colorScheme={"primary"}
                     _text={{ color: "white" }}
-                    onPress={() => {}}
-                    width={"60%"}
+                    onPress={() => {
+                      if (view === HomeScreen.LEADERBOARD) {
+                        setView(HomeScreen.MAP)
+                      } else {
+                        setView(HomeScreen.LEADERBOARD)
+                      }
+                    }}
                   >
-                    EcoBot
+                    Leaderboard
                   </Button>
-                </HStack>
-                <HStack minHeight={"400px"}>
-                  {userLocation && !showLeaderboard ? (
-                    <MapView
-                      style={styles.map}
-                      region={{
-                        latitude: userLocation?.coords.latitude,
-                        longitude: userLocation?.coords.longitude,
-                        latitudeDelta: 0.04,
-                        longitudeDelta: 0.02,
-                      }}
-                    >
-                      <Marker
-                        coordinate={userLocation?.coords}
-                        title={"Your Location"}
-                        pinColor="#000000"
-                      />
-                    </MapView>
-                  ) : showLeaderboard ? (
-                    <Container>
-                      <List>
-                        {data
-                          ?.filter((el: any) => el.name && el)
-                          .map((leaders: any) => {
-                            return <Text>{leaders.name}</Text>
-                          })}
-                      </List>
-
-                      <Text>Leaderboard</Text>
-                    </Container>
-                  ) : (
-                    <Text>loading map...</Text>
-                  )}
-                </HStack>
-
-                <HStack space={2} alignItems={"center"}>
-                  {showLeaderboard ? (
-                    <Button
-                      variant={"solid"}
-                      colorScheme={"primary"}
-                      _text={{ color: "white" }}
-                      onPress={() => {
-                        setShowLeaderBoard(false)
-                      }}
-                    >
-                      Map
-                    </Button>
-                  ) : (
-                    <Button
-                      variant={"solid"}
-                      colorScheme={"primary"}
-                      _text={{ color: "white" }}
-                      onPress={() => {
-                        setShowLeaderBoard(true)
-                        console.log("press")
-                      }}
-                    >
-                      Leaderboard
-                    </Button>
-                  )}
-
                   <Button
                     variant={"solid"}
                     colorScheme={"primary"}
                     _text={{ color: "white" }}
-                    onPress={() => {}}
+                    onPress={() => {
+                      if (view === HomeScreen.REPORT) {
+                        setView(HomeScreen.MAP)
+                      } else {
+                        setView(HomeScreen.REPORT)
+                      }
+                    }}
                   >
                     Add Points
                   </Button>
                 </HStack>
-                <AddPoints />
+                <HStack minHeight={"400px"}>
+                  {view === HomeScreen.MAP && (
+                    <MapDisplay userLocation={userLocation} />
+                  )}
+                  {view === HomeScreen.LEADERBOARD && <Leaderboard />}
+                  {view === HomeScreen.REPORT && (
+                    <AddPoints
+                      location={{
+                        latitude: userLocation?.coords.latitude,
+                        longitude: userLocation?.coords.longitude,
+                      }}
+                    />
+                  )}
+                  {view === HomeScreen.FIND && <Text>Find</Text>}
+                </HStack>
+                <HStack space={2} alignItems={"center"}>
+                  <Button
+                    variant={"solid"}
+                    colorScheme={"primary"}
+                    _text={{ color: "white" }}
+                    onPress={() => {
+                      if (view === HomeScreen.FIND) {
+                        setView(HomeScreen.MAP)
+                      } else {
+                        setView(HomeScreen.FIND)
+                      }
+                    }}
+                    width={"60%"}
+                  >
+                    I Wanna Help!
+                  </Button>
+                </HStack>
               </Stack>
             </ScrollView>
           </Stack>
