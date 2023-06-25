@@ -38,18 +38,11 @@ const Leaderboard = () => {
       height: "100%",
       marginTop: 10,
     },
-    redText: {
-      color: "red",
-      width: "50%",
-      fontSize: 16,
-    },
+
     list: {
       flexDirection: "row", // Arranges children horizontally
       justifyContent: "space-around", // Aligns children with equal spacing
       alignItems: "center", // Aligns children vertically
-      width: "100%",
-    },
-    listContainer: {
       width: "100%",
     },
     headers: {
@@ -59,7 +52,7 @@ const Leaderboard = () => {
       alignItems: "center", // Aligns children vertically
       marginVertical: 3,
     },
-    trashAmount: {
+    listItems: {
       width: "50%",
       alignItems: "center", // Aligns children vertically
     },
@@ -77,10 +70,10 @@ const Leaderboard = () => {
         {Object.entries(leaders).map(([key, value]) => {
           return (
             <Container key={key} style={styles.list}>
-              <Container style={styles.trashAmount}>
+              <Container style={styles.listItems}>
                 <Text style={{ fontSize: 16 }}>{key}</Text>
               </Container>
-              <Container style={styles.trashAmount}>
+              <Container style={styles.listItems}>
                 <Text style={{ fontSize: 16 }}>{value}</Text>
               </Container>
             </Container>
