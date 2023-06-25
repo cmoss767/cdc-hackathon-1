@@ -7,9 +7,14 @@ import { HStack, Spinner, Text } from "native-base"
 interface MapDisplayProps {
   userLocation: any
   helpLocation: any
+  toggleMap: boolean
 }
 
-const MapDisplay = ({ userLocation }: MapDisplayProps) => {
+const MapDisplay = ({
+  userLocation,
+  helpLocation,
+  toggleMap,
+}: MapDisplayProps) => {
   const styles = StyleSheet.create({
     map: {
       width: "100%",
@@ -70,12 +75,21 @@ const MapDisplay = ({ userLocation }: MapDisplayProps) => {
       {userLocation && !isLoading ? (
         <MapView
           style={styles.map}
-          region={{
-            latitude: userLocation?.coords.latitude,
-            longitude: userLocation?.coords.longitude,
-            latitudeDelta: 0.04,
-            longitudeDelta: 0.02,
-          }}
+          region={
+            toggleMap
+              ? {
+                  latitude: helpLocation?.coords.latitude,
+                  longitude: helpLocation?.coords.longitude,
+                  latitudeDelta: 0.04,
+                  longitudeDelta: 0.02,
+                }
+              : {
+                  latitude: userLocation?.coords.latitude,
+                  longitude: userLocation?.coords.longitude,
+                  latitudeDelta: 0.04,
+                  longitudeDelta: 0.02,
+                }
+          }
         >
           <Marker
             coordinate={userLocation?.coords}
@@ -83,7 +97,16 @@ const MapDisplay = ({ userLocation }: MapDisplayProps) => {
             pinColor="#00916E"
           />
           {trashReports}
+
           {pickupReports}
+          {toggleMap && (
+            <Marker
+              coordinate={helpLocation?.coords}
+              title={"Head Here to Help! 🏃‍♂️"}
+              description="The EcoBot has predicted trash in this area! 🤖"
+              pinColor="#B4CDED"
+            />
+          )}
         </MapView>
       ) : (
         <HStack alignItems={"center"} justifyContent={"center"}>
