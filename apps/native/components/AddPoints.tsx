@@ -61,7 +61,9 @@ const AddPoints = ({ location }: AddPointsProps) => {
       justifyContent={"space-evenly"}
       space={2}
     >
-      <Heading>Report Trash or Pickup</Heading>
+      <Heading size={"md"} color={"primary.600"}>
+        Report Trash or Pickup
+      </Heading>
       <Divider />
       <HStack alignItems={"center"} justifyContent={"center"} px={5} space={2}>
         <Text>Name</Text>

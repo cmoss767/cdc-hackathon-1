@@ -140,7 +140,7 @@ const MapDisplay = ({
                     `https://www.google.com/maps/dir/?api=1&destination=${helpLocation?.[0]},${helpLocation?.[1]}`
                   )
                 }}
-                pinColor="#ffa7d5"
+                pinColor="#E6AACE"
                 isPreselected={true}
               />
             </>

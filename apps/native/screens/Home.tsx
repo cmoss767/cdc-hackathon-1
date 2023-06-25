@@ -1,12 +1,14 @@
 import {
   Box,
   Button,
+  Divider,
   HStack,
   Heading,
   ScrollView,
   Stack,
   Text,
   View,
+  theme,
 } from "native-base"
 import React, { useEffect, useState } from "react"
 import * as Location from "expo-location"
@@ -68,15 +70,25 @@ const Home = () => {
                 alignItems={"center"}
                 space={2}
               >
-                <Heading fontWeight={600} size="sm" color="#999999">
-                  Litter Ladder
+                <Heading
+                  fontWeight={600}
+                  size="lg"
+                  color={"primary.600"}
+                  mb={-2}
+                >
+                  🚮 Litter Ladder 🪜
                 </Heading>
+                <Divider
+                  color={"primary.600"}
+                  bgColor={"primary.600"}
+                  w={"60%"}
+                />
                 <HStack space={2} alignItems={"center"}>
                   <Button
                     w={"150px"}
                     variant={"solid"}
                     colorScheme={"primary"}
-                    _text={{ color: "white" }}
+                    _text={{ color: theme.colors.white }}
                     onPress={() => {
                       if (view === HomeScreen.LEADERBOARD) {
                         setView(HomeScreen.MAP)
@@ -93,7 +105,7 @@ const Home = () => {
                     w={"150px"}
                     variant={"solid"}
                     colorScheme={"primary"}
-                    _text={{ color: "white" }}
+                    _text={{ color: theme.colors.white }}
                     onPress={() => {
                       if (view === HomeScreen.REPORT) {
                         setView(HomeScreen.MAP)
@@ -129,7 +141,7 @@ const Home = () => {
                   <Button
                     variant={"solid"}
                     colorScheme={"primary"}
-                    _text={{ color: "white" }}
+                    _text={{ color: theme.colors.white }}
                     onPress={() => {
                       handlePressHelp()
                     }}
