@@ -3,13 +3,7 @@ import ApiService from "../api/service";
 import axios from "axios";
 
 const reportTrash = async (data: any) => {
-  return await ApiService.post("/report", {
-    amount: 1,
-    location: {},
-    name: "wizard",
-    report: true,
-    severity: "LOW",
-  })
+  return await ApiService.post("/report", data)
     .then()
     .then((res: any) => res?.data?.data);
 };
