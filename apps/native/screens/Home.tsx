@@ -20,19 +20,17 @@ enum HomeScreen {
   MAP = "map",
   LEADERBOARD = "leaderboard",
   REPORT = "report",
-  FIND = "find",
 }
 
 const Home = () => {
   const [userLocation, setUserLocation] = useState<any>(null)
   const [view, setView] = useState<HomeScreen>(HomeScreen.MAP)
+  const [toggleMap, setToggleMap] = useState<boolean>(false)
 
   const { data, isLoading, isError } = useFindTrash({
     latitude: userLocation?.coords.latitude,
     longitude: userLocation?.coords.longitude,
   })
-
-  console.log(data, "found the trash?")
 
   useEffect(() => {
     ;(async () => {
@@ -47,23 +45,21 @@ const Home = () => {
   }, [])
 
   const handlePressHelp = () => {
-    if (view === HomeScreen.FIND) {
+    if (view === HomeScreen.MAP && toggleMap === false) {
+      setToggleMap(true)
+    } else if (view === HomeScreen.MAP && toggleMap === true) {
       setView(HomeScreen.MAP)
+      setToggleMap(false)
     } else {
-      setView(HomeScreen.FIND)
+      setView(HomeScreen.MAP)
+      setToggleMap(true)
     }
   }
 
   return (
     <>
       <Box
-        bg={{
-          linearGradient: {
-            colors: ["#F8FAFD", "#F8FAFD"],
-            start: [0.5, 0],
-            end: [0.5, 0.5],
-          },
-        }}
+        backgroundColor={"#BFCC94"}
         alignItems={"center"}
         justifyContent={"center"}
       >
@@ -118,7 +114,8 @@ const Home = () => {
                   {view === HomeScreen.MAP && (
                     <MapDisplay
                       userLocation={userLocation}
-                      helpLocation={"f"}
+                      helpLocation={data}
+                      toggleMap={toggleMap}
                     />
                   )}
                   {view === HomeScreen.LEADERBOARD && <Leaderboard />}
@@ -130,9 +127,8 @@ const Home = () => {
                       }}
                     />
                   )}
-                  {view === HomeScreen.FIND && <Text>Find</Text>}
                 </HStack>
-                <HStack space={2} alignItems={"center"}>
+                <HStack space={0} alignItems={"center"}>
                   <Button
                     variant={"solid"}
                     colorScheme={"primary"}
@@ -142,7 +138,7 @@ const Home = () => {
                     }}
                     width={"320px"}
                   >
-                    {view === HomeScreen.FIND
+                    {toggleMap && view === HomeScreen.MAP
                       ? "Back To My Current Location"
                       : "I Wanna Help!"}
                   </Button>
