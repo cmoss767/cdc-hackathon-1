@@ -11,15 +11,16 @@ const findTrash = async (req, res) => {
     //reshaping coords [[lat, long]]
     trash.forEach((trashItem) => {
       coordinates.push([
+        trashItem.time,
         trashItem.location.latitude,
         trashItem.location.longitude,
       ])
     })
+    const justCoords = coordinates.map((coords) => [coords[1], coords[2]])
 
     const numClusters = 5
-
     //getting 5 centers of the clusters
-    const { centroids } = kmeans(coordinates, numClusters, {
+    const { centroids } = kmeans(justCoords, numClusters, {
       maxIterations: 100,
       tolerance: 1e-6,
     })
@@ -43,35 +44,43 @@ const findTrash = async (req, res) => {
     }
 
     // Calculate the distances and find the centroid with the highest concentration
-    let highestConcentrationClusterSize = 0
+    let highestConcentrationClusterRate = 0
     let highestConcentrationClusterIndex = 0
 
     for (let i = 0; i < centroids.length; i++) {
       const centroid = centroids[i]
       let clusterSize = 0
+      let clusterRate = 0
+      let upperTime
+      let lowerTime
 
       for (const point of coordinates) {
         const distanceInMiles = calculateDistance(
-          point[0],
           point[1],
+          point[2],
           centroid[0],
           centroid[1]
         )
 
         if (distanceInMiles <= 5) {
           clusterSize++
+          if (point[0] > upperTime || !upperTime) {
+            upperTime = point[0]
+          }
+          if (point[0] < lowerTime || !lowerTime) {
+            lowerTime = point[0]
+          }
         }
       }
-      console.log(clusterSize, "clusterSize")
 
-      if (clusterSize > highestConcentrationClusterSize) {
-        highestConcentrationClusterSize = clusterSize
+      const timeDiff = upperTime - lowerTime
+
+      clusterRate = clusterSize / timeDiff
+
+      if (clusterRate > highestConcentrationClusterRate) {
+        highestConcentrationClusterRate = clusterRate
         highestConcentrationClusterIndex = i
       }
-      console.log(
-        highestConcentrationClusterSize,
-        "highestConcentrationClusterSize"
-      )
     }
     const highestConcentrationCentroid =
       centroids[highestConcentrationClusterIndex]
