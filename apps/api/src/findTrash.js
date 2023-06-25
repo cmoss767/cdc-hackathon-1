@@ -3,13 +3,6 @@ import { coordinates } from "./dummyData"
 
 const findTrash = async (req, res) => {
   try {
-    // Extract the previous locations from the request body
-
-    // Prepare and preprocess the data
-
-    // Define the number of clusters
-    // Define the number of clusters
-    // Define the number of clusters
     const numClusters = 5 // Adjust the number of clusters as needed
 
     const { centroids, clusters } = kmeans(coordinates, numClusters, {
@@ -17,21 +10,18 @@ const findTrash = async (req, res) => {
       tolerance: 1e-6,
     })
 
+    // Calculate the distances and find the centroid with the highest concentration
     let highestConcentrationClusterSize = 0
     let highestConcentrationClusterIndex = 0
 
     for (let i = 0; i < centroids.length; i++) {
       const centroid = centroids[i]
-      const cluster = clusters.filter((assignment) => assignment === i)
-
       let clusterSize = 0
 
-      for (const point of cluster) {
-        const pointIndex = point
-
+      for (const point of coordinates) {
         const distanceInMiles = calculateDistance(
-          coordinates[pointIndex][0],
-          coordinates[pointIndex][1],
+          point[0],
+          point[1],
           centroid[0],
           centroid[1]
         )
@@ -46,15 +36,11 @@ const findTrash = async (req, res) => {
         highestConcentrationClusterIndex = i
       }
     }
+    const highestConcentrationCentroid =
+      centroids[highestConcentrationClusterIndex]
+    let result = 0
 
-    const highestConcentrationCluster = clusters.filter(
-      (assignment) => assignment === highestConcentrationClusterIndex
-    )
-    const highestConcentrationCoordinates = highestConcentrationCluster.map(
-      (point) => coordinates[point]
-    )
-    console.log(coordinates.length, highestConcentrationCoordinates.length)
-    res.json(highestConcentrationCoordinates)
+    res.json(highestConcentrationCentroid)
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: "An error occurred" })
