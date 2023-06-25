@@ -27,10 +27,12 @@ const Home = () => {
   const [view, setView] = useState<HomeScreen>(HomeScreen.MAP)
   const [toggleMap, setToggleMap] = useState<boolean>(false)
 
-  const { data, isLoading, isError } = useFindTrash({
-    latitude: userLocation?.coords.latitude,
-    longitude: userLocation?.coords.longitude,
-  })
+  // const { data } = useFindTrash({
+  //   latitude: userLocation?.coords.latitude,
+  //   longitude: userLocation?.coords.longitude,
+  // })
+
+  // console.log(data)
 
   useEffect(() => {
     ;(async () => {
@@ -114,7 +116,10 @@ const Home = () => {
                   {view === HomeScreen.MAP && (
                     <MapDisplay
                       userLocation={userLocation}
-                      helpLocation={data}
+                      helpLocation={
+                        //data || ""
+                        ""
+                      }
                       toggleMap={toggleMap}
                     />
                   )}
