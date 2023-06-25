@@ -151,7 +151,12 @@ const Home = () => {
                     Add Points
                   </Button>
                 </HStack>
-                <AddPoints />
+                <AddPoints
+                  location={{
+                    latitude: userLocation?.coords.latitude,
+                    longitude: userLocation?.coords.longitude,
+                  }}
+                />
               </Stack>
             </ScrollView>
           </Stack>
