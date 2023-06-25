@@ -6,7 +6,6 @@ const getTrash = async (req: Request, res: Response) => {
     const prisma = new PrismaClient()
 
     const trash = await prisma.trash.findMany()
-    console.log(trash)
 
     return res.status(200).json({ message: "got the trash!", data: trash })
   } catch (err) {

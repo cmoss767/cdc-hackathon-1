@@ -57,6 +57,7 @@ const Leaderboard = () => {
       alignItems: "center", // Aligns children vertically
     },
   })
+  const sortedLeaders = Object.entries(leaders).sort((a, b) => b[1] - a[1])
 
   return (
     <>
@@ -67,7 +68,7 @@ const Leaderboard = () => {
           <Text style={{ fontSize: 18 }}>Points</Text>
         </Container>
 
-        {Object.entries(leaders).map(([key, value]) => {
+        {sortedLeaders.map(([key, value]) => {
           return (
             <Container key={key} style={styles.list}>
               <Container style={styles.listItems}>
