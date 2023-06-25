@@ -8,13 +8,13 @@ import {
   Text,
   View,
 } from "native-base"
-//import { RefreshControl } from "react-native";
 import React, { useEffect, useState } from "react"
 import * as Location from "expo-location"
 import AddPoints from "../components/AddPoints"
 import MapDisplay from "../components/MapDisplay"
 import Leaderboard from "../components/Leaderboard"
 import useFindTrash from "../hooks/useFindTrash"
+import useListLeaderboard from "../hooks/useListLeaderboard"
 
 enum HomeScreen {
   MAP = "map",
@@ -27,12 +27,7 @@ const Home = () => {
   const [view, setView] = useState<HomeScreen>(HomeScreen.MAP)
   const [toggleMap, setToggleMap] = useState<boolean>(false)
 
-  // const { data } = useFindTrash({
-  //   latitude: userLocation?.coords.latitude,
-  //   longitude: userLocation?.coords.longitude,
-  // })
-
-  // console.log(data)
+  const { data, isLoading } = useFindTrash()
 
   useEffect(() => {
     ;(async () => {
