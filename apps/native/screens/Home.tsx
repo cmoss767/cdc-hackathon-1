@@ -14,17 +14,23 @@ import * as Location from "expo-location"
 import AddPoints from "../components/AddPoints"
 import MapDisplay from "../components/MapDisplay"
 import Leaderboard from "../components/Leaderboard"
+import useFindTrash from "../hooks/useFindTrash"
 
 enum HomeScreen {
   MAP = "map",
   LEADERBOARD = "leaderboard",
   REPORT = "report",
-  FIND = "find",
 }
 
 const Home = () => {
   const [userLocation, setUserLocation] = useState<any>(null)
   const [view, setView] = useState<HomeScreen>(HomeScreen.MAP)
+  const [toggleMap, setToggleMap] = useState<boolean>(false)
+
+  const { data, isLoading, isError } = useFindTrash({
+    latitude: userLocation?.coords.latitude,
+    longitude: userLocation?.coords.longitude,
+  })
 
   useEffect(() => {
     ;(async () => {
@@ -38,16 +44,22 @@ const Home = () => {
     })()
   }, [])
 
+  const handlePressHelp = () => {
+    if (view === HomeScreen.MAP && toggleMap === false) {
+      setToggleMap(true)
+    } else if (view === HomeScreen.MAP && toggleMap === true) {
+      setView(HomeScreen.MAP)
+      setToggleMap(false)
+    } else {
+      setView(HomeScreen.MAP)
+      setToggleMap(true)
+    }
+  }
+
   return (
     <>
       <Box
-        bg={{
-          linearGradient: {
-            colors: ["#F8FAFD", "#F8FAFD"],
-            start: [0.5, 0],
-            end: [0.5, 0.5],
-          },
-        }}
+        backgroundColor={"#BFCC94"}
         alignItems={"center"}
         justifyContent={"center"}
       >
@@ -100,7 +112,11 @@ const Home = () => {
                 </HStack>
                 <HStack minHeight={"400px"} maxHeight={"75%"} maxWidth={"100%"}>
                   {view === HomeScreen.MAP && (
-                    <MapDisplay userLocation={userLocation} />
+                    <MapDisplay
+                      userLocation={userLocation}
+                      helpLocation={data}
+                      toggleMap={toggleMap}
+                    />
                   )}
                   {view === HomeScreen.LEADERBOARD && <Leaderboard />}
                   {view === HomeScreen.REPORT && (
@@ -111,23 +127,20 @@ const Home = () => {
                       }}
                     />
                   )}
-                  {view === HomeScreen.FIND && <Text>Find</Text>}
                 </HStack>
-                <HStack space={2} alignItems={"center"}>
+                <HStack space={0} alignItems={"center"}>
                   <Button
                     variant={"solid"}
                     colorScheme={"primary"}
                     _text={{ color: "white" }}
                     onPress={() => {
-                      if (view === HomeScreen.FIND) {
-                        setView(HomeScreen.MAP)
-                      } else {
-                        setView(HomeScreen.FIND)
-                      }
+                      handlePressHelp()
                     }}
                     width={"320px"}
                   >
-                    {view === HomeScreen.FIND ? "Back To Map" : "I Wanna Help!"}
+                    {toggleMap && view === HomeScreen.MAP
+                      ? "Back To My Current Location"
+                      : "I Wanna Help!"}
                   </Button>
                 </HStack>
               </Stack>
