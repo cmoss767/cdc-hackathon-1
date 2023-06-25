@@ -14,6 +14,7 @@ import * as Location from "expo-location"
 import AddPoints from "../components/AddPoints"
 import MapDisplay from "../components/MapDisplay"
 import Leaderboard from "../components/Leaderboard"
+import useFindTrash from "../hooks/useFindTrash"
 
 enum HomeScreen {
   MAP = "map",
@@ -26,6 +27,13 @@ const Home = () => {
   const [userLocation, setUserLocation] = useState<any>(null)
   const [view, setView] = useState<HomeScreen>(HomeScreen.MAP)
 
+  const { data, isLoading, isError } = useFindTrash({
+    latitude: userLocation?.coords.latitude,
+    longitude: userLocation?.coords.longitude,
+  })
+
+  console.log(data, "found the trash?")
+
   useEffect(() => {
     ;(async () => {
       let { status } = await Location.requestForegroundPermissionsAsync()
@@ -37,6 +45,14 @@ const Home = () => {
       }
     })()
   }, [])
+
+  const handlePressHelp = () => {
+    if (view === HomeScreen.FIND) {
+      setView(HomeScreen.MAP)
+    } else {
+      setView(HomeScreen.FIND)
+    }
+  }
 
   return (
     <>
@@ -100,7 +116,10 @@ const Home = () => {
                 </HStack>
                 <HStack minHeight={"400px"} maxHeight={"75%"} maxWidth={"100%"}>
                   {view === HomeScreen.MAP && (
-                    <MapDisplay userLocation={userLocation} />
+                    <MapDisplay
+                      userLocation={userLocation}
+                      helpLocation={"f"}
+                    />
                   )}
                   {view === HomeScreen.LEADERBOARD && <Leaderboard />}
                   {view === HomeScreen.REPORT && (
@@ -119,15 +138,13 @@ const Home = () => {
                     colorScheme={"primary"}
                     _text={{ color: "white" }}
                     onPress={() => {
-                      if (view === HomeScreen.FIND) {
-                        setView(HomeScreen.MAP)
-                      } else {
-                        setView(HomeScreen.FIND)
-                      }
+                      handlePressHelp()
                     }}
                     width={"320px"}
                   >
-                    {view === HomeScreen.FIND ? "Back To Map" : "I Wanna Help!"}
+                    {view === HomeScreen.FIND
+                      ? "Back To My Current Location"
+                      : "I Wanna Help!"}
                   </Button>
                 </HStack>
               </Stack>
