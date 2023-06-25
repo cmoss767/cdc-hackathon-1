@@ -12,7 +12,7 @@ model Trash {
     amount   Int?
     name     String?
     location Json?
-    report   Boolean?
+    report   Boolean         @default(false)
     severity ReportSeverity?
 }
 

@@ -85,7 +85,7 @@ const Home = () => {
                       }
                     }}
                   >
-                    Leaderboard
+                    {view === HomeScreen.LEADERBOARD ? "Home" : "Leaderboard"}
                   </Button>
                   <Button
                     variant={"solid"}
