@@ -1,7 +1,6 @@
 import {
   Button,
   Divider,
-  FormControl,
   HStack,
   Heading,
   Input,
@@ -12,7 +11,6 @@ import {
 } from "native-base"
 import React from "react"
 import useReportTrash from "../hooks/useReportTrash"
-import { Line } from "react-native-svg"
 interface TrashData {
   amount?: number
   name?: string
@@ -33,7 +31,7 @@ const AddPoints = ({ location }: AddPointsProps) => {
   const [name, setName] = React.useState<string>("")
   const [report, setReport] = React.useState<boolean>(false)
   const [severity, setSeverity] = React.useState<"LOW" | "MEDIUM" | "HIGH">(
-    "LOW"
+    "MEDIUM"
   )
 
   const reportTrash = useReportTrash()
@@ -133,7 +131,7 @@ const AddPoints = ({ location }: AddPointsProps) => {
         <Text>Severity</Text>
         <Slider
           size={"sm"}
-          defaultValue={1}
+          defaultValue={2}
           value={severity === "LOW" ? 1 : severity === "MEDIUM" ? 2 : 3}
           minValue={1}
           maxValue={3}
@@ -170,7 +168,7 @@ const AddPoints = ({ location }: AddPointsProps) => {
       </Stack>
       <Divider />
 
-      <Button onPress={handleReportTrash}>
+      <Button variant={"outline"} onPress={handleReportTrash}>
         {!report ? "Report Trash 🗑️" : "Add Points! 📈"}
       </Button>
     </Stack>
