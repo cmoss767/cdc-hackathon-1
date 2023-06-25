@@ -1,5 +1,3 @@
-//import { StatusBar } from "expo-status-bar";
-//import { Button } from "ui";
 import {
   Box,
   Button,
@@ -9,16 +7,11 @@ import {
   Stack,
   Text,
   View,
-  Container,
-  List,
 } from "native-base"
 //import { RefreshControl } from "react-native";
 import React, { useEffect, useState } from "react"
-import MapView, { Marker, Polygon } from "react-native-maps"
-import { StyleSheet } from "react-native"
 import * as Location from "expo-location"
 import AddPoints from "../components/AddPoints"
-import useListLeaderboard from "../hooks/useListLeaderboard"
 import MapDisplay from "../components/MapDisplay"
 import Leaderboard from "../components/Leaderboard"
 
@@ -31,10 +24,7 @@ enum HomeScreen {
 
 const Home = () => {
   const [userLocation, setUserLocation] = useState<any>(null)
-  const [showLeaderboard, setShowLeaderBoard] = useState(false)
   const [view, setView] = useState<HomeScreen>(HomeScreen.MAP)
-
-  const [errorMsg, setErrorMsg] = useState(null)
 
   useEffect(() => {
     ;(async () => {
@@ -74,6 +64,7 @@ const Home = () => {
                 </Heading>
                 <HStack space={2} alignItems={"center"}>
                   <Button
+                    w={"150px"}
                     variant={"solid"}
                     colorScheme={"primary"}
                     _text={{ color: "white" }}
@@ -85,9 +76,12 @@ const Home = () => {
                       }
                     }}
                   >
-                    {view === HomeScreen.LEADERBOARD ? "Home" : "Leaderboard"}
+                    {view === HomeScreen.LEADERBOARD
+                      ? "Return To Map"
+                      : "Leaderboard"}
                   </Button>
                   <Button
+                    w={"150px"}
                     variant={"solid"}
                     colorScheme={"primary"}
                     _text={{ color: "white" }}
@@ -99,10 +93,12 @@ const Home = () => {
                       }
                     }}
                   >
-                    Add Points
+                    {view === HomeScreen.REPORT
+                      ? "Return To Map"
+                      : "Report/Resolve"}
                   </Button>
                 </HStack>
-                <HStack minHeight={"400px"}>
+                <HStack minHeight={"400px"} maxHeight={"75%"} maxWidth={"100%"}>
                   {view === HomeScreen.MAP && (
                     <MapDisplay userLocation={userLocation} />
                   )}
@@ -129,9 +125,9 @@ const Home = () => {
                         setView(HomeScreen.FIND)
                       }
                     }}
-                    width={"60%"}
+                    width={"320px"}
                   >
-                    I Wanna Help!
+                    {view === HomeScreen.FIND ? "Back To Map" : "I Wanna Help!"}
                   </Button>
                 </HStack>
               </Stack>
