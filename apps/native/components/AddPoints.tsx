@@ -54,14 +54,16 @@ const AddPoints = ({ location }: AddPointsProps) => {
   return (
     <Stack
       maxWidth={"100%"}
-      minHeight={"100%"}
+      maxHeight={"100%"}
       px={2}
-      pt={1}
+      py={6}
       alignItems={"center"}
       justifyContent={"space-evenly"}
       space={2}
+      borderRadius={10}
+      bgColor={"#F0F4EF"}
     >
-      <Heading size={"md"} color={"primary.600"}>
+      <Heading size={"lg"} color={"primary.600"} mb={2}>
         Report Trash or Pickup
       </Heading>
       <Divider />
@@ -170,7 +172,7 @@ const AddPoints = ({ location }: AddPointsProps) => {
       </Stack>
       <Divider />
 
-      <Button variant={"outline"} onPress={handleReportTrash} mb={2}>
+      <Button variant={"outline"} onPress={handleReportTrash} mt={2}>
         {!report ? "Report Trash 🗑️" : "Add Points! 📈"}
       </Button>
     </Stack>
