@@ -99,7 +99,6 @@ const Leaderboard = () => {
                 w={"100%"}
                 justifyContent={"space-between"}
                 alignItems={"center"}
-                key={leader[0]}
               >
                 <HStack alignItems={"center"} justifyContent={"flex-start"}>
                   <Text
