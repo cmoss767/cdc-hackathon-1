@@ -122,7 +122,7 @@ const Home = () => {
                   >
                     {view === HomeScreen.REPORT
                       ? "Return To Map"
-                      : "Report/Resolve"}
+                      : "Report/Pickup"}
                   </Button>
                 </HStack>
                 <HStack minHeight={"400px"} maxHeight={"75%"} maxWidth={"100%"}>
