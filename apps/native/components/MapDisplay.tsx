@@ -109,7 +109,7 @@ const MapDisplay = ({
           <Marker
             coordinate={userLocation?.coords}
             title={"Your Location"}
-            pinColor="#00916E"
+            pinColor="#BFCC94"
           />
           {trashReports}
 
@@ -157,7 +157,7 @@ const MapDisplay = ({
                     `https://www.google.com/maps/dir/?api=1&destination=${helpLocation?.[0]},${helpLocation?.[1]}`
                   )
                 }}
-                pinColor="primary.600"
+                pinColor="#344966"
                 isPreselected={true}
               />
             </>
