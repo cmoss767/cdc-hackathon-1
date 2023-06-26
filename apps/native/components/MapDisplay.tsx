@@ -109,7 +109,7 @@ const MapDisplay = ({
           <Marker
             coordinate={userLocation?.coords}
             title={"Your Location"}
-            pinColor="#BFCC94"
+            pinColor="black"
           />
           {trashReports}
 

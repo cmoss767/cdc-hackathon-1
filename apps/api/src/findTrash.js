@@ -14,10 +14,10 @@ const findTrash = async (req, res) => {
         trashItem.location.longitude,
       ])
     })
-    const justCoords = coordinates.map((coords) => [coords[0], coords[1]])
+
     const numClusters = 5
     //getting 5 centers of the clusters
-    const { centroids } = kmeans(justCoords, numClusters, {
+    const { centroids } = kmeans(coordinates, numClusters, {
       maxIterations: 100,
       tolerance: 1e-6,
     })
