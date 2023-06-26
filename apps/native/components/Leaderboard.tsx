@@ -11,7 +11,7 @@ import {
   Text,
   View,
 } from "native-base"
-import React from "react"
+import React, { Fragment } from "react"
 import useListLeaderboard from "../hooks/useListLeaderboard"
 import { StyleSheet } from "react-native"
 
@@ -93,7 +93,7 @@ const Leaderboard = () => {
 
         {sortedLeaders.map((leader, index) => {
           return (
-            <>
+            <Fragment key={index}>
               <Divider bgColor={"primary.600"} />
               <HStack
                 w={"100%"}
@@ -143,7 +143,7 @@ const Leaderboard = () => {
                   </Text>
                 </Container>
               </HStack>
-            </>
+            </Fragment>
           )
         })}
       </Stack>

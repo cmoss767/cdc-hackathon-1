@@ -84,7 +84,7 @@ const MapDisplay = ({
         />
       ) : null
     })
-
+  console.log(helpLocation?.[0], helpLocation?.[1])
   return (
     <>
       {userLocation && !isLoading ? (
@@ -157,7 +157,7 @@ const MapDisplay = ({
                     `https://www.google.com/maps/dir/?api=1&destination=${helpLocation?.[0]},${helpLocation?.[1]}`
                   )
                 }}
-                pinColor="primary.600"
+                pinColor="blue"
                 isPreselected={true}
               />
             </>

@@ -10,12 +10,11 @@ const findTrash = async (req, res) => {
     //reshaping coords [[lat, long]]
     trash.forEach((trashItem) => {
       coordinates.push([
-        trashItem.time,
         trashItem.location.latitude,
         trashItem.location.longitude,
       ])
     })
-    const justCoords = coordinates.map((coords) => [coords[1], coords[2]])
+    const justCoords = coordinates.map((coords) => [coords[0], coords[1]])
     const numClusters = 5
     //getting 5 centers of the clusters
     const { centroids } = kmeans(justCoords, numClusters, {
@@ -36,35 +35,26 @@ const findTrash = async (req, res) => {
       return R * c
     }
     // Calculate the distances and find the centroid with the highest concentration
-    let highestConcentrationClusterRate = 0
+    let highestConcentrationClusterSize = 0
     let highestConcentrationClusterIndex = 0
     for (let i = 0; i < centroids.length; i++) {
       const centroid = centroids[i]
       let clusterSize = 0
-      let clusterRate = 0
-      let upperTime
-      let lowerTime
+
       for (const point of coordinates) {
         const distanceInMiles = calculateDistance(
+          point[0],
           point[1],
-          point[2],
           centroid[0],
           centroid[1]
         )
         if (distanceInMiles <= 5) {
           clusterSize++
-          if (point[0] > upperTime || !upperTime) {
-            upperTime = point[0]
-          }
-          if (point[0] < lowerTime || !lowerTime) {
-            lowerTime = point[0]
-          }
         }
       }
-      const timeDiff = upperTime - lowerTime
-      clusterRate = clusterSize / timeDiff
-      if (clusterRate > highestConcentrationClusterRate) {
-        highestConcentrationClusterRate = clusterRate
+
+      if (clusterSize > highestConcentrationClusterSize) {
+        highestConcentrationClusterSize = clusterSize
         highestConcentrationClusterIndex = i
       }
     }
@@ -77,7 +67,7 @@ const findTrash = async (req, res) => {
     )
       .then((address) => {
         if (address) {
-          foundAddress = address
+          foundAddress = Object.values(address).join(", ")
         } else {
           res
             .status(500)
@@ -87,25 +77,8 @@ const findTrash = async (req, res) => {
       .catch((error) => {
         console.error("An error occurred:", error)
       })
-    const town = foundAddress?.town || ""
-    const suburb = foundAddress?.suburb || ""
-    const county = foundAddress?.county || ""
-    const city = foundAddress?.city || ""
-    let conditionalStr = ""
 
-    if (suburb) {
-      conditionalStr += `${suburb}, `
-    } else if (town) {
-      conditionalStr += `${town}, `
-    }
-
-    if (county) {
-      conditionalStr += county
-    } else if (city) {
-      conditionalStr += city
-    }
-
-    const prompt = `I want you to act as an expert on the biodiversity of an area and the importance of picking up trash in ${conditionalStr}. My first request is "I need help identifying biodiversity in my area. Keep your response shorter than 500 characters."`
+    const prompt = `I want you to act as an expert on the biodiversity of an area and the importance of picking up trash in ${foundAddress}. My first request is "I need help identifying biodiversity in my area. Keep your response shorter than 500 characters."`
 
     const comment = await makeChatRequest(prompt, res)
     const parsedComment = comment.data.choices[0].text.trim()
