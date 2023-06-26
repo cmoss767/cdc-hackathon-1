@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Container,
+  Divider,
   HStack,
   Heading,
   List,
@@ -33,12 +34,6 @@ const Leaderboard = () => {
     }
   }
   const styles = StyleSheet.create({
-    leaderboard: {
-      width: "100%",
-      height: "100%",
-      marginTop: 10,
-    },
-
     list: {
       flexDirection: "row", // Arranges children horizontally
       justifyContent: "space-around", // Aligns children with equal spacing
@@ -57,30 +52,102 @@ const Leaderboard = () => {
       alignItems: "center", // Aligns children vertically
     },
   })
+
   const sortedLeaders = Object.entries(leaders).sort((a, b) => b[1] - a[1])
 
   return (
     <>
-      <Container style={styles.leaderboard} alignItems={"center"}>
-        <Text style={{ fontSize: 22, marginBottom: 10 }}>Race to the top!</Text>
-        <Container style={styles.headers}>
-          <Text style={{ fontSize: 18 }}>Name</Text>
-          <Text style={{ fontSize: 18 }}>Points</Text>
-        </Container>
-
-        {sortedLeaders.map(([key, value]) => {
-          return (
-            <Container key={key} style={styles.list}>
-              <Container style={styles.listItems}>
-                <Text style={{ fontSize: 16 }}>{key}</Text>
-              </Container>
-              <Container style={styles.listItems}>
-                <Text style={{ fontSize: 16 }}>{value}</Text>
-              </Container>
+      <Stack
+        direction={"column"}
+        alignItems={"center"}
+        justifyContent={"flex-start"}
+        w={"100%"}
+        h={"100%"}
+        borderRadius={10}
+        bgColor={"#F0F4EF"}
+        py={6}
+        px={12}
+        overflow={"scroll"}
+      >
+        <Heading color={"primary.600"} mb={4}>
+          Climb the Ladder! 🧗‍♀️
+        </Heading>
+        <Divider w={"100%"} bgColor={"primary.600"} mb={4} />
+        <HStack
+          w={"100%"}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          <HStack alignItems={"center"}>
+            <Container w={"50px"} mr={6}>
+              <Text color={"primary.600"}>Rank</Text>
             </Container>
+            <Text color={"primary.600"} w={"100px"}>
+              Name
+            </Text>
+          </HStack>
+          <Container w={"50px"}>
+            <Text color={"primary.600"}>Points</Text>
+          </Container>
+        </HStack>
+
+        {sortedLeaders.map((leader, index) => {
+          return (
+            <>
+              <Divider bgColor={"primary.600"} />
+              <HStack
+                w={"100%"}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+                key={leader[0]}
+              >
+                <HStack alignItems={"center"} justifyContent={"flex-start"}>
+                  <Text
+                    color={"primary.600"}
+                    textAlign={"left"}
+                    pl={index < 3 ? 1.5 : 3}
+                    w={"50px"}
+                    fontSize={"16px"}
+                    mr={6}
+                  >
+                    {index === 0
+                      ? "🥇"
+                      : index === 1
+                      ? "🥈"
+                      : index === 2
+                      ? "🥉"
+                      : index + 1}
+                  </Text>
+                  <Text
+                    color={"primary.600"}
+                    textAlign={"left"}
+                    fontSize={"16px"}
+                    w={"100px"}
+                  >
+                    {leader[0] ? leader[0] : "Anonymous"}
+                  </Text>
+                </HStack>
+                <Container
+                  w={"50px"}
+                  display={"flex"}
+                  alignItems={"flex-end"}
+                  justifyContent={"center"}
+                >
+                  <Text
+                    color={"primary.600"}
+                    fontSize={"16px"}
+                    pr={4}
+                    width={"50px"}
+                    textAlign={"right"}
+                  >
+                    {leader[1]}
+                  </Text>
+                </Container>
+              </HStack>
+            </>
           )
         })}
-      </Container>
+      </Stack>
     </>
   )
 }
