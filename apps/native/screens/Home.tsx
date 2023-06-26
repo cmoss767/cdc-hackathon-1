@@ -29,7 +29,13 @@ const Home = () => {
   const [view, setView] = useState<HomeScreen>(HomeScreen.MAP)
   const [toggleMap, setToggleMap] = useState<boolean>(false)
 
-  const { data, isLoading } = useFindTrash()
+  const { data, isLoading } = useFindTrash(toggleMap)
+
+  console.log(
+    "this should only fire when clicking the button now!",
+    toggleMap,
+    data
+  )
 
   useEffect(() => {
     ;(async () => {
@@ -62,7 +68,7 @@ const Home = () => {
         alignItems={"center"}
         justifyContent={"center"}
       >
-        <View mt={"50px"}>
+        <View mt={"75px"}>
           <Stack justifyContent={"space-between"} alignItems={"center"}>
             <ScrollView mb={10}>
               <Stack
@@ -76,7 +82,7 @@ const Home = () => {
                   color={"primary.600"}
                   mb={-2}
                 >
-                  🚮 Litter Ladder 🪜
+                  🗑️ Litter Ladder 🪜
                 </Heading>
                 <Divider
                   color={"primary.600"}
@@ -123,7 +129,8 @@ const Home = () => {
                   {view === HomeScreen.MAP && (
                     <MapDisplay
                       userLocation={userLocation}
-                      helpLocation={data}
+                      helpLocation={data?.location}
+                      ecoBotSays={data?.text}
                       toggleMap={toggleMap}
                     />
                   )}

@@ -16,12 +16,14 @@ import {
 interface MapDisplayProps {
   userLocation: any
   helpLocation: any
+  ecoBotSays: string
   toggleMap: boolean
 }
 
 const MapDisplay = ({
   userLocation,
   helpLocation,
+  ecoBotSays,
   toggleMap,
 }: MapDisplayProps) => {
   const styles = StyleSheet.create({
@@ -32,8 +34,6 @@ const MapDisplay = ({
   })
 
   const { data, isLoading, isError } = useGetTrashReports()
-
-  console.log(toggleMap, "toggleMap")
 
   const trashReports = data
     ?.filter((trash: any) => trash.report === false)
