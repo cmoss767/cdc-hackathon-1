@@ -18,7 +18,7 @@ app.use(express.json())
 
 app.get("/", getTrash)
 
-app.get("/predict-location", findTrash)
+app.put("/predict-location", findTrash)
 
 app.post("/report", addTrash)
 

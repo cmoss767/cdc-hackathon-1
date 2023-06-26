@@ -1,5 +1,6 @@
 import { kmeans } from "ml-kmeans"
 import { PrismaClient } from "@prisma/client"
+import { makeChatRequest, reverseGeocode } from "./helperFunctions"
 
 const findTrash = async (req, res) => {
   try {
@@ -69,12 +70,47 @@ const findTrash = async (req, res) => {
     }
     const highestConcentrationCentroid =
       centroids[highestConcentrationClusterIndex]
-    return res
-      .status(200)
-      .json({
-        message: "Found some trash!",
-        data: highestConcentrationCentroid,
+    let foundAddress
+    await reverseGeocode(
+      highestConcentrationCentroid[0],
+      highestConcentrationCentroid[1]
+    )
+      .then((address) => {
+        if (address) {
+          foundAddress = address
+        } else {
+          res
+            .status(500)
+            .json({ error: "An error reverse geocaching occurred" })
+        }
       })
+      .catch((error) => {
+        console.error("An error occurred:", error)
+      })
+    const town = foundAddress.town || ""
+    const suburb = foundAddress.suburb || ""
+    const county = foundAddress.county || ""
+    const city = foundAddress.city || ""
+    let conditionalStr = ""
+
+    if (suburb) {
+      conditionalStr += `${suburb}, `
+    } else if (town) {
+      conditionalStr += `${town}, `
+    }
+
+    if (county) {
+      conditionalStr += county
+    } else if (city) {
+      conditionalStr += city
+    }
+
+    const prompt = `I want you to act as an expert on the biodiversity of an area and the importance of picking up trash in ${conditionalStr}. My first request is "I need help identifying biodiversity in my area. Keep your response shorter than 500 characters."`
+
+    const comment = await makeChatRequest(prompt, res)
+    const parsedComment = comment.data.choices[0].text.trim()
+
+    res.json({ location: highestConcentrationCentroid, text: parsedComment })
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: "An error occurred" })
