@@ -4,6 +4,7 @@ import {
   Divider,
   HStack,
   Heading,
+  Popover,
   ScrollView,
   Stack,
   Text,
@@ -28,8 +29,9 @@ const Home = () => {
   const [userLocation, setUserLocation] = useState<any>(null)
   const [view, setView] = useState<HomeScreen>(HomeScreen.MAP)
   const [toggleMap, setToggleMap] = useState<boolean>(false)
+  const initialFocusRef = React.useRef(null)
 
-  const { data, isLoading } = useFindTrash(toggleMap)
+  const { data, isLoading, refetch } = useFindTrash()
 
   console.log(
     "this should only fire when clicking the button now!",
@@ -59,12 +61,15 @@ const Home = () => {
       setView(HomeScreen.MAP)
       setToggleMap(true)
     }
+    refetch()
   }
 
   return (
     <>
       <Box
         backgroundColor={"#BFCC94"}
+        display={"flex"}
+        flexDirection={"column"}
         alignItems={"center"}
         justifyContent={"center"}
       >
@@ -131,6 +136,7 @@ const Home = () => {
                       userLocation={userLocation}
                       helpLocation={data?.location}
                       ecoBotSays={data?.text}
+                      isBotLoading={isLoading}
                       toggleMap={toggleMap}
                     />
                   )}
@@ -144,7 +150,7 @@ const Home = () => {
                     />
                   )}
                 </HStack>
-                <HStack space={0} alignItems={"center"}>
+                <HStack space={2} alignItems={"center"}>
                   <Button
                     variant={"solid"}
                     colorScheme={"primary"}
@@ -152,12 +158,36 @@ const Home = () => {
                     onPress={() => {
                       handlePressHelp()
                     }}
-                    width={"320px"}
+                    width={!toggleMap ? "320px" : "150px"}
                   >
                     {toggleMap && view === HomeScreen.MAP
-                      ? "Back To My Current Location"
+                      ? "Current Location"
                       : "I Wanna Help!"}
                   </Button>
+                  {toggleMap && !isLoading && (
+                    <Popover
+                      initialFocusRef={initialFocusRef}
+                      trigger={(triggerProps) => {
+                        return (
+                          <Button
+                            w={"150px"}
+                            variant={"solid"}
+                            {...triggerProps}
+                          >
+                            🤖 EcoBot Says...
+                          </Button>
+                        )
+                      }}
+                    >
+                      <Popover.Content width="80">
+                        <Popover.Arrow />
+                        <Popover.CloseButton />
+                        {/* @ts-ignore */}
+                        <Popover.Header>🤖 EcoBot Says...</Popover.Header>
+                        <Popover.Body>{data?.text}</Popover.Body>
+                      </Popover.Content>
+                    </Popover>
+                  )}
                 </HStack>
               </Stack>
             </ScrollView>

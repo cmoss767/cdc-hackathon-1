@@ -5,11 +5,11 @@ import ApiService from "../api/service"
 const findTrash = async () =>
   await ApiService.get("/predict-location").then((res) => res?.data?.data)
 
-function useFindTrash(mapView: boolean) {
+function useFindTrash() {
   return useQuery({
     queryKey: ["findTrash"],
     queryFn: findTrash,
-    enabled: !!mapView,
+    enabled: false,
     keepPreviousData: true,
   })
 }

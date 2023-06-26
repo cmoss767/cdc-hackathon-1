@@ -4,6 +4,8 @@ import { Linking, StyleSheet } from "react-native"
 import useGetTrashReports from "../hooks/useGetTrashReports"
 import {
   Box,
+  Button,
+  FormControl,
   HStack,
   Heading,
   Modal,
@@ -18,12 +20,14 @@ interface MapDisplayProps {
   helpLocation: any
   ecoBotSays: string
   toggleMap: boolean
+  isBotLoading: boolean
 }
 
 const MapDisplay = ({
   userLocation,
   helpLocation,
   ecoBotSays,
+  isBotLoading,
   toggleMap,
 }: MapDisplayProps) => {
   const styles = StyleSheet.create({
@@ -87,7 +91,7 @@ const MapDisplay = ({
         <MapView
           style={styles.map}
           region={
-            toggleMap
+            toggleMap && !isBotLoading
               ? {
                   latitude: helpLocation?.[0],
                   longitude: helpLocation?.[1],
@@ -122,11 +126,24 @@ const MapDisplay = ({
             alignItems={"center"}
             justifyContent={"center"}
           >
-            <Heading>Head to the Pink Pin! 🏃‍♂️</Heading>
-            <Text>EcoBot predicts that there is trash in this area! 🤖</Text>
+            {isBotLoading ? (
+              <Text color={"primary.600"}>EcoBot is calculating... 🤖</Text>
+            ) : (
+              ""
+            )}
+            {!isBotLoading && (
+              <>
+                <Heading color={"primary.600"}>
+                  Head to the Blue Pin! 🏃‍♂️
+                </Heading>
+                <Text color={"primary.600"}>
+                  EcoBot predicts that there is trash in this area! 🤖
+                </Text>
+              </>
+            )}
           </Box>
 
-          {toggleMap && (
+          {toggleMap && !isBotLoading && (
             <>
               <Marker
                 coordinate={{
@@ -140,7 +157,7 @@ const MapDisplay = ({
                     `https://www.google.com/maps/dir/?api=1&destination=${helpLocation?.[0]},${helpLocation?.[1]}`
                   )
                 }}
-                pinColor="#E6AACE"
+                pinColor="primary.600"
                 isPreselected={true}
               />
             </>
@@ -149,7 +166,7 @@ const MapDisplay = ({
       ) : (
         <HStack alignItems={"center"} justifyContent={"center"}>
           <Spinner />
-          <Text>Loading location... 🌎</Text>
+          <Text color={"primary.600"}> Loading location... 🌎</Text>
         </HStack>
       )}
     </>
