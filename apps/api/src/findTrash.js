@@ -110,7 +110,12 @@ const findTrash = async (req, res) => {
     const comment = await makeChatRequest(prompt, res)
     const parsedComment = comment.data.choices[0].text.trim()
 
-    res.json({ location: highestConcentrationCentroid, text: parsedComment })
+    res.json({
+      data: {
+        location: highestConcentrationCentroid,
+        text: parsedComment,
+      },
+    })
   } catch (error) {
     console.log(error)
     res.status(500).json({ error: "An error occurred" })
