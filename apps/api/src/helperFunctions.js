@@ -14,9 +14,9 @@ export async function reverseGeocode(lat, lon) {
     const { address } = response.data
 
     // Extract the desired address components
-    const city = address.city || address.town || address.village
-    const state = address.state
-    const country = address.country
+    const city = address?.city || address?.town || address?.village || ""
+    const state = address?.state
+    const country = address?.country
 
     // Return the address components
     return address

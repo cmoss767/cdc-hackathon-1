@@ -87,10 +87,10 @@ const findTrash = async (req, res) => {
       .catch((error) => {
         console.error("An error occurred:", error)
       })
-    const town = foundAddress.town || ""
-    const suburb = foundAddress.suburb || ""
-    const county = foundAddress.county || ""
-    const city = foundAddress.city || ""
+    const town = foundAddress?.town || ""
+    const suburb = foundAddress?.suburb || ""
+    const county = foundAddress?.county || ""
+    const city = foundAddress?.city || ""
     let conditionalStr = ""
 
     if (suburb) {
