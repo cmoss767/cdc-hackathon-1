@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   Divider,
   HStack,
@@ -8,8 +9,9 @@ import {
   Stack,
   Switch,
   Text,
+  VStack,
 } from "native-base"
-import React from "react"
+import React, { useState } from "react"
 import useReportTrash from "../hooks/useReportTrash"
 interface TrashData {
   amount?: number
@@ -33,16 +35,26 @@ const AddPoints = ({ location }: AddPointsProps) => {
   const [severity, setSeverity] = React.useState<"LOW" | "MEDIUM" | "HIGH">(
     "MEDIUM"
   )
+  const [showConfirm, setShowConfirm] = useState<boolean>(false)
 
   const reportTrash = useReportTrash()
   const handleReportTrash = async () => {
-    await reportTrash.mutateAsync({
-      amount: Number(amount),
-      name,
-      location,
-      report,
-      severity,
-    })
+    await reportTrash
+      .mutateAsync({
+        amount: Number(amount),
+        name,
+        location,
+        report,
+        severity,
+      })
+      .then(() => {
+        setShowConfirm(true)
+      })
+      .then(() => {
+        setTimeout(() => {
+          setShowConfirm(false)
+        }, 3000)
+      })
   }
 
   const handleNameInput = (text: string) => setName(text)
@@ -171,10 +183,37 @@ const AddPoints = ({ location }: AddPointsProps) => {
         </HStack>
       </Stack>
       <Divider />
-
-      <Button variant={"outline"} onPress={handleReportTrash} mt={2}>
-        {!report ? "Report Trash 🗑️" : "Add Points! 📈"}
-      </Button>
+      {showConfirm ? (
+        <Alert
+          w="80%"
+          variant={"outline"}
+          colorScheme="success"
+          status="success"
+          mt={2}
+        >
+          <VStack space={2} flexShrink={1} w="100%">
+            <HStack
+              flexShrink={1}
+              space={2}
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <HStack space={2} flexShrink={1} alignItems="center">
+                <Alert.Icon />
+                <Text color={"primary.600"}>
+                  {`Successfully ${
+                    report ? "added points!" : "reported trash!"
+                  }`}
+                </Text>
+              </HStack>
+            </HStack>
+          </VStack>
+        </Alert>
+      ) : (
+        <Button variant={"outline"} onPress={handleReportTrash} mt={2}>
+          {!report ? "Report Trash 🗑️" : "Add Points! 📈"}
+        </Button>
+      )}
     </Stack>
   )
 }
