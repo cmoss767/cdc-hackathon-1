@@ -84,7 +84,7 @@ const MapDisplay = ({
         />
       ) : null
     })
-  console.log(helpLocation?.[0], helpLocation?.[1])
+
   return (
     <>
       {userLocation && !isLoading ? (

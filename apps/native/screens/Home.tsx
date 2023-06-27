@@ -33,12 +33,6 @@ const Home = () => {
 
   const { data, isLoading, refetch } = useFindTrash()
 
-  console.log(
-    "this should only fire when clicking the button now!",
-    toggleMap,
-    data
-  )
-
   useEffect(() => {
     ;(async () => {
       let { status } = await Location.requestForegroundPermissionsAsync()
